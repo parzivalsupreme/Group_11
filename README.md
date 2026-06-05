@@ -48,8 +48,7 @@ src/group11_Project/
 ## 1. Clone the Repository
 
 ```bash
-https://github.com/parzivalsupreme/Group_11.git
-cd repo
+git clone https://github.com/parzivalsupreme/Group_11.git
 ```
 
 ## 2. Get the Latest Changes
@@ -71,22 +70,7 @@ git add .
 git commit -m "Describe changes"
 git push origin main
 ```
-
-## Daily Workflow
-
-```bash
-git pull origin main
-# make changes
-
-git add .
-git commit -m "Describe changes"
-git push origin main
-```
-
 ## Important
 
 Always pull the latest changes before starting work and before pushing to avoid conflicts:
 
-```bash
-git pull origin main
-```
