@@ -113,13 +113,6 @@ public class DashboardPanel extends JPanel {
         JPanel chartCard = UiUtils.makeCard(340, 16, 560, 340);
         add(chartCard);
 
-        JLabel chartTitle = new JLabel("MONTHLY/WEEKLY INCOME CHART HERE");
-        chartTitle.setFont(new Font("Arial", Font.PLAIN, 11));
-        chartTitle.setForeground(Theme.MUTED);
-        chartTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        chartTitle.setBounds(14, 14, 532, 18);
-        chartCard.add(chartTitle);
-
         barChart = new BarChartPanel(data.getLedger());
         barChart.setBounds(14, 40, 532, 290);
         chartCard.add(barChart);

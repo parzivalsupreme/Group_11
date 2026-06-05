@@ -164,12 +164,6 @@ public class ReportsPanel extends JPanel {
         add(chartCard);
         UiUtils.addCardTitle(chartCard, "Chart", 16, 10);
 
-        JLabel chartPlaceholder = new JLabel("CHART HERE (PIE GRAPH OR BAR GRAPH)", SwingConstants.CENTER);
-        chartPlaceholder.setFont(new Font("Arial", Font.ITALIC, 10));
-        chartPlaceholder.setForeground(Theme.MUTED);
-        chartPlaceholder.setBounds(0, 200, 400, 16);
-        chartCard.add(chartPlaceholder);
-
         repChart = new ReportChartPanel(data.getLedger());
         repChart.setBounds(12, 32, 376, 356);
         chartCard.add(repChart);
