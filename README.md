@@ -48,7 +48,7 @@ src/group11_Project/
 ## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/repo.git
+https://github.com/parzivalsupreme/Group_11.git
 cd repo
 ```
 
