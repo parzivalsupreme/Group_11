@@ -95,8 +95,8 @@ public class DashboardPanel extends JPanel {
         });
 
         dashTotalSales = buildMetricCard("TOTAL SALES",    "₱0.00",  20, 260, Theme.SUCCESS);
-        dashExpenses   = buildMetricCard("TOTAL EXPENSES", "₱0.00", 230, 260, Theme.DANGER);
-        dashBalance    = buildMetricCard("NET BALANCE",    "₱0.00", 440, 260, Theme.TEXT);
+        dashExpenses   = buildMetricCard("TOTAL EXPENSES", "₱0.00", 125, 260, Theme.DANGER); // Change from 230 to 125
+        dashBalance    = buildMetricCard("NET BALANCE",    "₱0.00", 230, 260, Theme.TEXT); // Change from 440 to 230
 
         dashSalesCount = new JLabel("0 transactions");
         dashSalesCount.setFont(new Font("Arial", Font.PLAIN, 10));
@@ -153,7 +153,7 @@ public class DashboardPanel extends JPanel {
     }
 
     private JLabel buildMetricCard(String label, String value, int x, int y, Color valueColor) {
-        JPanel card = UiUtils.makeCard(x, y, 196, 80);
+        JPanel card = UiUtils.makeCard(x, y, 100, 80); // Change from 196 to 100
         add(card);
 
         JLabel lbl = new JLabel(label);
