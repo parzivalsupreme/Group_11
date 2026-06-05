@@ -122,7 +122,7 @@ public class Menu extends JFrame {
         btnLogout.setFocusPainted(false);
         btnLogout.setBorderPainted(false);
         btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnLogout.setBounds(40, 614, 100, 30);
+        btnLogout.setBounds(40, 580, 100, 30); // Change from 614 to 580 (Danduan)
         btnLogout.addActionListener(e -> {
             dispose();
             LoginForm login = new LoginForm();
