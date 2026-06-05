@@ -139,7 +139,7 @@ public class Menu extends JFrame {
         lbl.setOpaque(true);
         lbl.setHorizontalAlignment(SwingConstants.LEFT);
         lbl.setBorder(new EmptyBorder(0, 16, 0, 0));
-        lbl.setBounds(0, y, 180, 44);
+        lbl.setBounds(0, y, 179, 44); // Change from 180 to 179 (Danduan)
         lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return lbl;
     }
