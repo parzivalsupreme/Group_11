@@ -43,3 +43,50 @@ src/group11_Project/
     └── table/
         └── DeleteButtonEditor.java
 ```
+# Collaborator Workflow
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/repo.git
+cd repo
+```
+
+## 2. Get the Latest Changes
+
+Before starting work, pull the latest version of the `main` branch:
+
+```bash
+git pull origin main
+```
+
+## 3. Make Your Changes
+
+Edit the project files as needed.
+
+## 4. Stage, Commit, and Push
+
+```bash
+git add .
+git commit -m "Describe changes"
+git push origin main
+```
+
+## Daily Workflow
+
+```bash
+git pull origin main
+# make changes
+
+git add .
+git commit -m "Describe changes"
+git push origin main
+```
+
+## Important
+
+Always pull the latest changes before starting work and before pushing to avoid conflicts:
+
+```bash
+git pull origin main
+```
