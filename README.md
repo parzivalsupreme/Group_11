@@ -43,35 +43,3 @@ src/group11_Project/
     └── table/
         └── DeleteButtonEditor.java
 ```
-
-## Build & Run
-
-From the project root:
-
-```bash
-# Compile
-javac -d out $(find src -name "*.java")
-
-# Run
-java -cp out group11_Project.Main
-```
-
-Compiled `.class` files are written to the `out/` directory.
-
-## Login Credentials
-
-| Username | Password  |
-|----------|-----------|
-| `user`   | `user1234` |
-
-## Usage Notes
-
-- Ledger entries support types **Sale** and **Expense**, with statuses **Paid** or **Pending**
-- Payment methods: Cash, GCash, Card, Bank Transfer
-- Data is stored in memory only — entries are lost when the application closes
-- Use the sidebar to switch between Dashboard, Ledger, Reports, and Users
-- Click **logout** in the sidebar to return to the login screen
-
-## Authors
-
-Group 11 — School Project
