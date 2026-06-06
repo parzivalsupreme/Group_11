@@ -36,7 +36,7 @@ public class DashboardPanel extends JPanel {
         add(userCard);
 
         JLabel userIcon = new JLabel("USERNAME \uD83D\uDC64");
-        userIcon.setFont(new Font("Arial", Font.BOLD, 13));
+        userIcon.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13)); // Change font from Arial to Segoe UI Emoji
         userIcon.setForeground(Theme.TEXT);
         userIcon.setBounds(14, 12, 260, 18);
         userCard.add(userIcon);
