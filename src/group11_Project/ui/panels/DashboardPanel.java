@@ -156,7 +156,7 @@ public class DashboardPanel extends JPanel {
         card.add(lbl);
 
         JLabel val = new JLabel(value);
-        val.setFont(new Font("Courier New", Font.BOLD, 20));
+        val.setFont(new Font("Courier New", Font.BOLD, 12)); // Change from 20 to 12
         val.setForeground(valueColor);
         val.setBounds(12, 26, 172, 28);
         card.add(val);
