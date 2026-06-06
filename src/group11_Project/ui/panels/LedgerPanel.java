@@ -98,7 +98,7 @@ public class LedgerPanel extends JPanel {
         filterRow.setBounds(20, 62, 880, 32);
         add(filterRow);
 
-        JButton btnAdd = new JButton("＋");
+        JButton btnAdd = new JButton("+");
         btnAdd.setFont(new Font("Arial", Font.PLAIN, 14));
         btnAdd.setBackground(Theme.SURFACE);
         btnAdd.setForeground(Theme.TEXT);
@@ -110,7 +110,7 @@ public class LedgerPanel extends JPanel {
         filterRow.add(btnAdd);
 
         JButton btnDel = new JButton("\uD83D\uDDD1");
-        btnDel.setFont(new Font("Arial", Font.PLAIN, 12));
+        btnDel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12)); // Change font from Arial to Segoe UI Emoji
         btnDel.setBackground(Theme.SURFACE);
         btnDel.setForeground(Theme.DANGER);
         btnDel.setFocusPainted(false);
