@@ -2,6 +2,7 @@ package group11_Project.ui.panels;
 
 import group11_Project.data.AppData;
 import group11_Project.model.LedgerEntry;
+import group11_Project.data.Database;
 import group11_Project.ui.Theme;
 import group11_Project.ui.UiUtils;
 import group11_Project.ui.table.DeleteButtonEditor;
@@ -283,6 +284,7 @@ public class LedgerPanel extends JPanel {
                     (String) fMethod.getSelectedItem(),
                     (String) fType.getSelectedItem(),
                     (String) fStatus.getSelectedItem()));
+                Database.saveLedger(data.getLedger()); // For the database
                 dlg.dispose();
                 onDataChanged.run();
             } catch (Exception ex) {
@@ -301,6 +303,7 @@ public class LedgerPanel extends JPanel {
             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             data.getLedger().removeIf(e -> e.getItem().equals(item) &&
                 e.getDatetime().format(DateTimeFormatter.ofPattern("MMM dd hh:mm a")).equals(time));
+            Database.saveLedger(data.getLedger()); // For the database
             onDataChanged.run();
         }
     }
