@@ -1,6 +1,7 @@
 package group11_Project.data;
 
 import group11_Project.model.LedgerEntry;
+import group11_Project.data.Database; // New
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public class AppData {
 
     public AppData() {
         users.add(new String[]{"Admin User", "admin", "Admin", "Full Access"});
+        Database.loadLedger(ledger); // For the Database
     }
 
     public List<LedgerEntry> getLedger() { return ledger; }
