@@ -133,7 +133,7 @@ public class Menu extends JFrame {
 
     private JLabel makeNavItem(String text, int y, boolean active) {
         JLabel lbl = new JLabel(text);
-        lbl.setFont(new Font("Arial", Font.PLAIN, 11));
+        lbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 11)); // Change font from Arial to Segoe UI Emoji
         lbl.setForeground(active ? Theme.TEXT : Theme.MUTED);
         lbl.setBackground(active ? Theme.SIDEBAR_ACTIVE : Theme.SIDEBAR);
         lbl.setOpaque(true);
