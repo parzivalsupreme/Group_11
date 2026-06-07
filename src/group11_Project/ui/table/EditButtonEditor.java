@@ -6,20 +6,20 @@ import java.util.function.IntConsumer;
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class DeleteButtonEditor extends DefaultCellEditor {
+public class EditButtonEditor extends DefaultCellEditor { // Change from delete to edit
     private final IntConsumer onDelete;
     private int currentRow;
 
-    public DeleteButtonEditor(JCheckBox cb, IntConsumer onDelete) {
+    public EditButtonEditor(JCheckBox cb, IntConsumer onDelete) {
         super(cb);
-        this.onDelete = onDelete;
+        this.onEdit = onEdit;
     }
 
     @Override
     public Component getTableCellEditorComponent(JTable table,
             Object value, boolean isSelected, int row, int col) {
         currentRow = row;
-        JButton b = new JButton("✕");
+        JButton b = new JButton("E"); // Edit
         b.setFont(new Font("Arial", Font.PLAIN, 10));
         b.setForeground(Theme.DANGER);
         b.setBackground(Theme.SURFACE);
