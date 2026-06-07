@@ -210,7 +210,14 @@ public class ReportsPanel extends JPanel {
         repBalance.setText(FormatUtils.fmt(totalSales - totalExp - totalRent)); // New
         repExp.setText(FormatUtils.fmt(totalExp));
         repRent.setText(FormatUtils.fmt(totalRent)); // New
-        repTotal.setText(FormatUtils.fmt(totalSales));
+        double displayedTotal; // New
+        if (rSales.isSelected()) {
+            displayedTotal = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Sale")
+                && e.getStatus().equalsIgnoreCase("Paid")).mapToDouble(LedgerEntry::getTotal).sum();
+        } else {
+            displayedTotal = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Expense")
+                || e.getType().equalsIgnoreCase("Rent")).mapToDouble(LedgerEntry::getTotal).sum();
+        }
 
         repSalesPanel.removeAll();
         
