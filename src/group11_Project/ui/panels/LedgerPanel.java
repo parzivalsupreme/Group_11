@@ -22,6 +22,7 @@ public class LedgerPanel extends JPanel {
     private final Runnable onDataChanged;
 
     private DefaultTableModel ledgerTableModel;
+    private JTable ledgerTable; // New
     private JComboBox<String> cboLedgerMonth, cboLedgerYear, cboLedgerStatus;
     private JTextField txtLedgerSearch;
 
@@ -118,6 +119,7 @@ public class LedgerPanel extends JPanel {
         btnDel.setBorder(new LineBorder(Theme.BORDER, 1));
         btnDel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnDel.setPreferredSize(new Dimension(30, 28));
+        btnDel.addActionListener(e -> deleteSelectedEntry()); // New 
         filterRow.add(btnDel);
 
         cboLedgerStatus.setPreferredSize(new Dimension(100, 28));
@@ -131,30 +133,35 @@ public class LedgerPanel extends JPanel {
             @Override public boolean isCellEditable(int r, int c) { return c == 6; }
         };
 
-        JTable table = new JTable(ledgerTableModel);
-        table.setFont(new Font("Arial", Font.PLAIN, 12));
-        table.setRowHeight(30);
-        table.setGridColor(Theme.BORDER);
-        table.setBackground(Theme.SURFACE);
-        table.setSelectionBackground(new Color(245, 243, 239));
-        table.setFocusable(false);
+        ledgerTable = new JTable(ledgerTableModel); // Change table to private ledgerTable
+        ledgerTable.setFont(new Font("Arial", Font.PLAIN, 12));
+        ledgerTable.setRowHeight(30);
+        ledgerTable.setGridColor(Theme.BORDER);
+        ledgerTable.setBackground(Theme.SURFACE);
+        ledgerTable.setSelectionBackground(new Color(245, 243, 239));
+        ledgerTable.setFocusable(false);
 
-        JTableHeader header = table.getTableHeader();
+        JTableHeader header = ledgerTable.getTableHeader(); // table to ledgerTable
         header.setFont(new Font("Arial", Font.BOLD, 10));
         header.setBackground(new Color(230, 230, 230));
         header.setForeground(Theme.TEXT);
         header.setBorder(new MatteBorder(0, 0, 1, 0, Theme.BORDER));
         header.setReorderingAllowed(false);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(120);
-        table.getColumnModel().getColumn(1).setPreferredWidth(70);
-        table.getColumnModel().getColumn(2).setPreferredWidth(100);
-        table.getColumnModel().getColumn(3).setPreferredWidth(100);
-        table.getColumnModel().getColumn(4).setPreferredWidth(160);
-        table.getColumnModel().getColumn(5).setPreferredWidth(80);
-        table.getColumnModel().getColumn(6).setMaxWidth(40);
+        ledgerTable.getSelectionModel().addListSelectionListener(e -> { // New
+            if (!e.getValueIsAdjusting()) { // enable/disable btnDel based on selection
+            }
+        }); 
 
-        table.getColumnModel().getColumn(5).setCellRenderer((t, val, sel, foc, row, col) -> {
+        ledgerTable.getColumnModel().getColumn(0).setPreferredWidth(120); // table to ledgerTable
+        ledgerTable.getColumnModel().getColumn(1).setPreferredWidth(70);
+        ledgerTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        ledgerTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+        ledgerTable.getColumnModel().getColumn(4).setPreferredWidth(160);
+        ledgerTable.getColumnModel().getColumn(5).setPreferredWidth(80);
+        ledgerTable.getColumnModel().getColumn(6).setMaxWidth(40);
+
+        ledgerTable.getColumnModel().getColumn(5).setCellRenderer((t, val, sel, foc, row, col) -> {
             JLabel badge = new JLabel(String.valueOf(val), SwingConstants.CENTER);
             badge.setFont(new Font("Arial", Font.PLAIN, 10));
             badge.setOpaque(true);
@@ -169,7 +176,7 @@ public class LedgerPanel extends JPanel {
             return badge;
         });
 
-        table.getColumn("").setCellRenderer((t, val, sel, foc, row, col) -> {
+        ledgerTable.getColumn("").setCellRenderer((t, val, sel, foc, row, col) -> {
             JButton b = new JButton("✕");
             b.setFont(new Font("Arial", Font.PLAIN, 10));
             b.setForeground(Theme.DANGER);
@@ -178,9 +185,9 @@ public class LedgerPanel extends JPanel {
             b.setFocusPainted(false);
             return b;
         });
-        table.getColumn("").setCellEditor(new DeleteButtonEditor(new JCheckBox(), this::confirmDeleteEntry));
+        ledgerTable.getColumn("").setCellEditor(new DeleteButtonEditor(new JCheckBox(), this::confirmDeleteEntry));
 
-        JScrollPane scroll = new JScrollPane(table);
+        JScrollPane scroll = new JScrollPane(ledgerTable);
         scroll.setBounds(20, 100, 880, 550);
         scroll.setBorder(new LineBorder(Theme.BORDER, 1, true));
         add(scroll);
@@ -202,6 +209,32 @@ public class LedgerPanel extends JPanel {
             lbl.setText("ALL  " + yr);
         } else {
             lbl.setText(Constants.MONTHS[mo - 1].substring(0, 3).toUpperCase() + " " + yr);
+        }
+    }
+
+    private void deleteSelectedEntry() { // Definitely new
+        int viewRow = ledgerTable.getSelectedRow();
+        if (viewRow < 0) {
+            JOptionPane.showMessageDialog(parent, 
+                "Please select a row to delete.", 
+                "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int modelRow = ledgerTable.convertRowIndexToModel(viewRow);
+        String time = (String) ledgerTableModel.getValueAt(modelRow, 0);
+        String item = (String) ledgerTableModel.getValueAt(modelRow, 4);
+
+        if (JOptionPane.showConfirmDialog(parent, 
+            "Delete this entry?\n" + item + " (" + time + ")", 
+            "Confirm Delete", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+            data.getLedger().removeIf(e -> 
+                e.getItem().equals(item) &&
+                e.getDatetime().format(DateTimeFormatter.ofPattern("MMM dd hh:mm a")).equals(time));
+
+            Database.saveLedger(data.getLedger());
+            onDataChanged.run();
+            // Refresh will clear selection automatically
         }
     }
 
