@@ -23,6 +23,8 @@ public class ReportsPanel extends JPanel {
     private JPanel repSalesPanel;
     private JComboBox<String> cboRepMonth, cboRepYear;
     private ReportChartPanel repChart;
+    private JRadioButton rSales; // New
+    private JRadioButton rExp; // New
 
     public ReportsPanel(AppData data) {
         this.data = data;
@@ -117,14 +119,14 @@ public class ReportsPanel extends JPanel {
         optionsPanel.setBounds(0, 284, 460, 80);
         salesCard.add(optionsPanel);
 
-        JLabel optLbl = new JLabel("Options");
+        JLabel optLbl = new JLabel("Filters"); // New
         optLbl.setFont(new Font("Arial", Font.PLAIN, 10));
         optLbl.setForeground(Theme.MUTED);
         optLbl.setBounds(12, 8, 200, 14);
         optionsPanel.add(optLbl);
 
         ButtonGroup bg = new ButtonGroup();
-        JRadioButton rSales = new JRadioButton("Sales (PAID)");
+        rSales = new JRadioButton("Sales (PAID)"); // New
         rSales.setFont(new Font("Arial", Font.PLAIN, 10));
         rSales.setBackground(Theme.SURFACE);
         rSales.setForeground(Theme.TEXT);
@@ -133,13 +135,16 @@ public class ReportsPanel extends JPanel {
         bg.add(rSales);
         optionsPanel.add(rSales);
 
-        JRadioButton rExp = new JRadioButton("Additional Expenses");
+        rExp = new JRadioButton("Additional Expenses"); // New
         rExp.setFont(new Font("Arial", Font.PLAIN, 10));
         rExp.setBackground(Theme.SURFACE);
         rExp.setForeground(Theme.TEXT);
         rExp.setBounds(12, 44, 160, 18);
         bg.add(rExp);
         optionsPanel.add(rExp);
+
+        rSales.addActionListener(e -> refresh()); // New
+        rExp.addActionListener(e -> refresh()); // New
 
         JPanel totalRow = new JPanel(null);
         totalRow.setBackground(Theme.SURFACE);
@@ -193,20 +198,47 @@ public class ReportsPanel extends JPanel {
             .filter(e -> e.getDatetime().getMonthValue() - 1 == mo && e.getDatetime().getYear() == yr)
             .collect(Collectors.toList());
 
-        double totalSales = filtered.stream().filter(e -> e.getType().equals("Sale"))
-            .mapToDouble(LedgerEntry::getTotal).sum();
-        double totalExp = filtered.stream().filter(e -> e.getType().equals("Expense"))
-            .mapToDouble(LedgerEntry::getTotal).sum();
+        // New (Start here)
+        double totalSales = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Sale"))
+        		.mapToDouble(LedgerEntry::getTotal).sum();
+        double totalExp = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Expense"))
+        	    .mapToDouble(LedgerEntry::getTotal).sum();
+        double totalRent = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Rent"))
+        	    .mapToDouble(LedgerEntry::getTotal).sum();
+        // End here
 
-        repBalance.setText(FormatUtils.fmt(totalSales - totalExp));
+        repBalance.setText(FormatUtils.fmt(totalSales - totalExp - totalRent)); // New
         repExp.setText(FormatUtils.fmt(totalExp));
-        repRent.setText(FormatUtils.fmt(totalExp * 0.15));
+        repRent.setText(FormatUtils.fmt(totalRent)); // New
         repTotal.setText(FormatUtils.fmt(totalSales));
 
         repSalesPanel.removeAll();
+        
+        // New (Start here)
         Map<String, Double> itemMap = new LinkedHashMap<>();
-        filtered.stream().filter(e -> e.getType().equals("Sale"))
-            .forEach(e -> itemMap.merge(e.getItem(), e.getTotal(), Double::sum));
+        if (rSales.isSelected()) {
+            filtered.stream()
+                .filter(e ->
+                    e.getType().equalsIgnoreCase("Sale")
+                    && e.getStatus().equalsIgnoreCase("Paid"))
+                .forEach(e ->
+                    itemMap.merge(
+                        e.getItem(),
+                        e.getTotal(),
+                        Double::sum));
+        }
+        else if (rExp.isSelected()) {
+
+            filtered.stream()
+                .filter(e ->
+                    e.getType().equalsIgnoreCase("Expense")
+                    || e.getType().equalsIgnoreCase("Rent"))
+                .forEach(e ->
+                    itemMap.merge(
+                        e.getItem(),
+                        e.getTotal(),
+                        Double::sum));
+        } // End here
 
         if (itemMap.isEmpty()) {
             JLabel none = new JLabel("No sales data for this period.");
