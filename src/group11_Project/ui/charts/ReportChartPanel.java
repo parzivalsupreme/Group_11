@@ -38,9 +38,11 @@ public class ReportChartPanel extends JPanel {
             .mapToDouble(LedgerEntry::getTotal).sum();
         double totalExp = filtered.stream().filter(e -> e.getType().equals("Expense"))
             .mapToDouble(LedgerEntry::getTotal).sum();
-        double balance = totalSales - totalExp;
+        double totalRent = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Rent")) 
+        	.mapToDouble(LedgerEntry::getTotal).sum(); // New
+        double balance = totalSales - totalExp - totalRent; // New
 
-        double[] vals = {totalSales, totalExp, Math.max(balance, 0)};
+        double[] vals = {totalSales, totalExp + totalRent, Math.max(balance, 0)}; // New
         String[] labels = {"Sales", "Expenses", "Balance"};
         Color[] colors = {Theme.SUCCESS, Theme.DANGER, balance >= 0 ? Theme.ACCENT : Theme.DANGER};
         double maxV = Math.max(1, Arrays.stream(vals).max().getAsDouble());
