@@ -35,6 +35,15 @@ public class LedgerEntry {
     public String getType()            { return type; }
     public String getStatus()          { return status; }
 
+    // For the Edit
+    public void setDatetime(LocalDateTime datetime) { this.datetime = datetime; } // New (Start here)
+    public void setItem(String item)                { this.item = item; }
+    public void setQuantity(int quantity)           { this.quantity = quantity; }
+    public void setAmount(double amount)            { this.amount = amount; }
+    public void setMethod(String method)            { this.method = method; }
+    public void setType(String type)                { this.type = type; }
+    public void setStatus(String status)            { this.status = status; } // End here
+
     public String getFormattedDatetime() {
         return datetime.format(DISPLAY_FMT);
     }
