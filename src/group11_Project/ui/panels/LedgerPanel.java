@@ -3,9 +3,10 @@ package group11_Project.ui.panels;
 import group11_Project.data.AppData;
 import group11_Project.model.LedgerEntry;
 import group11_Project.data.Database;
+import java.util.Optional; // New
 import group11_Project.ui.Theme;
 import group11_Project.ui.UiUtils;
-import group11_Project.ui.table.DeleteButtonEditor;
+import group11_Project.ui.table.EditButtonEditor; // Edit
 import group11_Project.util.Constants;
 import group11_Project.util.FormatUtils;
 import java.awt.*;
@@ -23,6 +24,7 @@ public class LedgerPanel extends JPanel {
 
     private DefaultTableModel ledgerTableModel;
     private JTable ledgerTable; // New
+    private JButton btnDel; // New
     private JComboBox<String> cboLedgerMonth, cboLedgerYear, cboLedgerStatus;
     private JTextField txtLedgerSearch;
 
@@ -111,7 +113,7 @@ public class LedgerPanel extends JPanel {
         btnAdd.addActionListener(e -> showAddEntryDialog());
         filterRow.add(btnAdd);
 
-        JButton btnDel = new JButton("\uD83D\uDDD1");
+        btnDel = new JButton("\uD83D\uDDD1");
         btnDel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12)); // Change font from Arial to Segoe UI Emoji
         btnDel.setBackground(Theme.SURFACE);
         btnDel.setForeground(Theme.DANGER);
@@ -177,7 +179,7 @@ public class LedgerPanel extends JPanel {
         });
 
         ledgerTable.getColumn("").setCellRenderer((t, val, sel, foc, row, col) -> {
-            JButton b = new JButton("✕");
+            JButton b = new JButton("Edit");
             b.setFont(new Font("Arial", Font.PLAIN, 10));
             b.setForeground(Theme.DANGER);
             b.setBackground(Theme.SURFACE);
@@ -185,7 +187,8 @@ public class LedgerPanel extends JPanel {
             b.setFocusPainted(false);
             return b;
         });
-        ledgerTable.getColumn("").setCellEditor(new DeleteButtonEditor(new JCheckBox(), this::confirmDeleteEntry));
+        // change to this::editEntry
+        ledgerTable.getColumn("").setCellEditor(new DeleteButtonEditor(new JCheckBox(), this::editEntry));
 
         JScrollPane scroll = new JScrollPane(ledgerTable);
         scroll.setBounds(20, 100, 880, 550);
@@ -328,12 +331,95 @@ public class LedgerPanel extends JPanel {
         dlg.setVisible(true);
     }
 
+    // New Edit from table column
+    private void editEntry(int viewRow) {
+        if (viewRow < 0) return;
+        int modelRow = ledgerTable.convertRowIndexToModel(viewRow);
+        String timeStr = (String) ledgerTableModel.getValueAt(modelRow, 0);
+        String itemName = (String) ledgerTableModel.getValueAt(modelRow, 4);
+
+        Optional<LedgerEntry> optEntry = data.getLedger().stream()
+            .filter(e -> e.getItem().equals(itemName) &&
+                e.getDatetime().format(DateTimeFormatter.ofPattern("MMM dd hh:mm a")).equals(timeStr))
+            .findFirst();
+
+        optEntry.ifPresent(this::showEditEntryDialog);
+    }
+
+    // New Edit Dialog
+    private void showEditEntryDialog(LedgerEntry entry) {
+        JDialog dlg = new JDialog(parent, "Edit Ledger Entry", true);
+        dlg.setSize(420, 380);
+        dlg.setLocationRelativeTo(parent);
+        dlg.setLayout(null);
+        dlg.getContentPane().setBackground(Theme.SURFACE);
+
+        JTextField fItem = UiUtils.styledField(); fItem.setText(entry.getItem()); fItem.setBounds(16, 54, 180, 28);
+        JTextField fQty  = UiUtils.styledField(); fQty.setText(String.valueOf(entry.getQuantity())); fQty.setBounds(210, 54, 80, 28);
+        JTextField fAmt  = UiUtils.styledField(); fAmt.setText(String.valueOf(entry.getAmount())); fAmt.setBounds(16, 116, 130, 28);
+
+        JComboBox<String> fMethod = UiUtils.makeCombo(new String[]{"Cash", "GCash", "Card", "Bank Transfer"});
+        fMethod.setSelectedItem(entry.getMethod()); fMethod.setBounds(160, 116, 130, 28);
+
+        JComboBox<String> fType = UiUtils.makeCombo(new String[]{"Sale", "Expense"});
+        fType.setSelectedItem(entry.getType()); fType.setBounds(16, 178, 130, 28);
+
+        JComboBox<String> fStatus = UiUtils.makeCombo(new String[]{"Paid", "Pending"});
+        fStatus.setSelectedItem(entry.getStatus()); fStatus.setBounds(160, 178, 130, 28);
+
+        JTextField fDate = UiUtils.styledField();
+        fDate.setText(entry.getDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        fDate.setBounds(16, 240, 275, 28);
+
+        UiUtils.addDialogLabel(dlg, "Item Name", 16, 36);
+        UiUtils.addDialogLabel(dlg, "Qty", 210, 36);
+        UiUtils.addDialogLabel(dlg, "Amount (₱)", 16, 98);
+        UiUtils.addDialogLabel(dlg, "Method", 160, 98);
+        UiUtils.addDialogLabel(dlg, "Type", 16, 160);
+        UiUtils.addDialogLabel(dlg, "Status", 160, 160);
+        UiUtils.addDialogLabel(dlg, "Date (yyyy-MM-dd HH:mm)", 16, 222);
+
+        dlg.add(fItem); dlg.add(fQty); dlg.add(fAmt);
+        dlg.add(fMethod); dlg.add(fType); dlg.add(fStatus); dlg.add(fDate);
+
+        JButton save = UiUtils.makeButton("Save", 200, 308, 90, 32);
+        JButton cancel = new JButton("Cancel");
+        cancel.setFont(new Font("Arial", Font.PLAIN, 12));
+        cancel.setBounds(100, 308, 90, 32);
+        cancel.addActionListener(e -> dlg.dispose());
+        dlg.add(cancel);
+
+        save.addActionListener(e -> {
+            try {
+                String item = fItem.getText().trim();
+                if (item.isEmpty()) { JOptionPane.showMessageDialog(dlg, "Enter item name."); return; }
+
+                entry.setItem(item);
+                entry.setQuantity(Integer.parseInt(fQty.getText().trim()));
+                entry.setAmount(Double.parseDouble(fAmt.getText().trim()));
+                entry.setMethod((String) fMethod.getSelectedItem());
+                entry.setType((String) fType.getSelectedItem());
+                entry.setStatus((String) fStatus.getSelectedItem());
+                entry.setDatetime(LocalDateTime.parse(fDate.getText().trim(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+
+                Database.saveLedger(data.getLedger());
+                dlg.dispose();
+                onDataChanged.run();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dlg, "Invalid input: " + ex.getMessage());
+            }
+        });
+        dlg.add(save);
+        dlg.setVisible(true);
+    }
+
     private void confirmDeleteEntry(int viewRow) {
         if (viewRow < 0) return;
         String time = (String) ledgerTableModel.getValueAt(viewRow, 0);
         String item = (String) ledgerTableModel.getValueAt(viewRow, 4);
-        if (JOptionPane.showConfirmDialog(parent, "Delete this entry?", "Confirm",
-            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(parent, "Delete this entry?\n" + item + " (" + time + ")", // New
+        		"Confirm Delete", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             data.getLedger().removeIf(e -> e.getItem().equals(item) &&
                 e.getDatetime().format(DateTimeFormatter.ofPattern("MMM dd hh:mm a")).equals(time));
             Database.saveLedger(data.getLedger()); // For the database
