@@ -35,8 +35,8 @@ public class DashboardPanel extends JPanel {
         JPanel userCard = UiUtils.makeCard(20, 16, 300, 90);
         add(userCard);
 
-        JLabel userIcon = new JLabel("BLESSIE (OWNER) \uD83D\uDC64"); // Change username
-        userIcon.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14)); // Change font from Arial to Segoe UI Emoji
+        JLabel userIcon = new JLabel("BLESSIE (OWNER) \uD83D\uDC64");
+        userIcon.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
         userIcon.setForeground(Theme.TEXT);
         userIcon.setBounds(14, 12, 260, 18);
         userCard.add(userIcon);
@@ -46,6 +46,7 @@ public class DashboardPanel extends JPanel {
         adminLbl.setForeground(Theme.MUTED);
         adminLbl.setBounds(14, 32, 260, 16);
         userCard.add(adminLbl);
+        adminLbl.setText(data.getCurrentUser()); // New
 
         JPanel monthCard = UiUtils.makeCard(20, 118, 300, 130);
         add(monthCard);
@@ -125,7 +126,7 @@ public class DashboardPanel extends JPanel {
         dashRecentPanel.setBackground(Theme.SURFACE);
         JScrollPane scroll = new JScrollPane(dashRecentPanel);
         scroll.setBorder(null);
-        scroll.setBounds(0, 36, 878, 238); // Change dimension
+        scroll.setBounds(1, 36, 878, 238); // New (880 to 878)
         recentCard.add(scroll);
 
         initMonthYear(monthDisplay);
@@ -156,7 +157,7 @@ public class DashboardPanel extends JPanel {
         card.add(lbl);
 
         JLabel val = new JLabel(value);
-        val.setFont(new Font("Courier New", Font.BOLD, 12)); // Change from 20 to 12
+        val.setFont(new Font("Courier New", Font.BOLD, 12)); // New
         val.setForeground(valueColor);
         val.setBounds(12, 26, 172, 28);
         card.add(val);
@@ -216,7 +217,7 @@ public class DashboardPanel extends JPanel {
     private JPanel buildRecentRow(LedgerEntry e) {
         JPanel row = new JPanel(null);
         row.setBackground(Theme.SURFACE);
-        row.setMaximumSize(new Dimension(878, 52)); // Change dimension
+        row.setMaximumSize(new Dimension(878, 52)); // New (880 to 878)
         row.setMinimumSize(new Dimension(878, 52));
         row.setPreferredSize(new Dimension(878, 52));
         row.setBorder(new MatteBorder(0, 0, 1, 0, Theme.BORDER));

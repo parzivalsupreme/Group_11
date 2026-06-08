@@ -1,6 +1,7 @@
 package group11_Project.ui.panels;
 
 import group11_Project.data.AppData;
+import group11_Project.data.Database; // New
 import group11_Project.ui.Theme;
 import group11_Project.ui.UiUtils;
 import java.awt.*;
@@ -25,6 +26,9 @@ public class UsersPanel extends JPanel {
 
     private void build() {
         JButton btnAdd = UiUtils.makeButton("+ Add User", 20, 18, 110, 30);
+        boolean admin =data.getCurrentRole().equalsIgnoreCase("Admin");
+        btnAdd.setEnabled(admin);
+
         btnAdd.addActionListener(e -> showAddUserDialog());
         add(btnAdd);
 
@@ -67,23 +71,15 @@ public class UsersPanel extends JPanel {
             name.setAlignmentX(Component.CENTER_ALIGNMENT);
             card.add(name);
 
-            JLabel role = new JLabel(u[1] + " · " + u[2], SwingConstants.CENTER);
+            JLabel role = new JLabel(u[1] + " · " + u[3],SwingConstants.CENTER); // New
             role.setFont(new Font("Arial", Font.PLAIN, 10));
             role.setForeground(Theme.MUTED);
             role.setAlignmentX(Component.CENTER_ALIGNMENT);
             card.add(role);
             card.add(Box.createRigidArea(new Dimension(0, 8)));
 
-            JLabel access = new JLabel(u[3], SwingConstants.CENTER);
-            access.setFont(new Font("Arial", Font.PLAIN, 10));
-            access.setForeground(new Color(12, 84, 96));
-            access.setBackground(new Color(232, 244, 248));
-            access.setOpaque(true);
-            access.setBorder(new EmptyBorder(3, 10, 3, 10));
-            access.setAlignmentX(Component.CENTER_ALIGNMENT);
-            card.add(access);
-
-            if (i > 0) {
+            boolean admin =data.getCurrentRole().equalsIgnoreCase("Admin"); // New
+            if (i > 0 && admin) {
                 card.add(Box.createRigidArea(new Dimension(0, 8)));
                 JButton del = UiUtils.makeButton("Remove", 0, 0, 80, 24);
                 del.setBackground(new Color(255, 245, 245));
@@ -114,17 +110,17 @@ public class UsersPanel extends JPanel {
 
         JTextField fName     = UiUtils.styledField(); fName.setBounds(16, 54, 160, 28);
         JTextField fUsername = UiUtils.styledField(); fUsername.setBounds(190, 54, 160, 28);
-        JComboBox<String> fRole   = UiUtils.makeCombo(new String[]{"Admin", "Cashier", "Inventory", "Viewer"});
+        JComboBox<String> fRole   = UiUtils.makeCombo(new String[]{"Admin", "Guest"});
         fRole.setBounds(16, 116, 160, 28);
-        JComboBox<String> fAccess = UiUtils.makeCombo(new String[]{"Full Access", "Limited Access", "Read Only"});
-        fAccess.setBounds(190, 116, 160, 28);
+        JPasswordField fPassword = new JPasswordField("Password:"); // New
+        fPassword.setBounds(190, 116, 160, 28); // New
 
         UiUtils.addDialogLabel(dlg, "Full Name",   16, 36);
         UiUtils.addDialogLabel(dlg, "Username",   190, 36);
         UiUtils.addDialogLabel(dlg, "Role",        16, 98);
-        UiUtils.addDialogLabel(dlg, "Access",     190, 98);
+        UiUtils.addDialogLabel(dlg, "Password",     190, 98); // New
 
-        dlg.add(fName); dlg.add(fUsername); dlg.add(fRole); dlg.add(fAccess);
+        dlg.add(fName); dlg.add(fUsername); dlg.add(fRole); dlg.add(fPassword); // New
 
         JButton save = UiUtils.makeButton("Add User", 190, 190, 100, 32);
         JButton cancel = new JButton("Cancel");
@@ -136,9 +132,14 @@ public class UsersPanel extends JPanel {
         save.addActionListener(e -> {
             String name = fName.getText().trim();
             String uname = fUsername.getText().trim();
-            if (name.isEmpty()) { JOptionPane.showMessageDialog(dlg, "Enter full name."); return; }
-            data.getUsers().add(new String[]{name, uname,
-                (String) fRole.getSelectedItem(), (String) fAccess.getSelectedItem()});
+            if (name.isEmpty()) { 
+            	JOptionPane.showMessageDialog(dlg, "Enter full name."); 
+            	return; 
+            }
+            data.getUsers().add(new String[]{name, uname, 
+            		new String(fPassword.getPassword()), // New
+            		(String)fRole.getSelectedItem()});
+            Database.saveUsers(data.getUsers()); // New
             dlg.dispose();
             refresh();
         });
