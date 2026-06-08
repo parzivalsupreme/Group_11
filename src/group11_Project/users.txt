@@ -1,0 +1,2 @@
+Administrator|user|user1234|Admin
+Test|test|1234|Guest
