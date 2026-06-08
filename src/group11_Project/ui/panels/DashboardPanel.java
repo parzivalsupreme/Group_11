@@ -35,8 +35,8 @@ public class DashboardPanel extends JPanel {
         JPanel userCard = UiUtils.makeCard(20, 16, 300, 90);
         add(userCard);
 
-        JLabel userIcon = new JLabel("USERNAME \uD83D\uDC64");
-        userIcon.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13)); // Change font from Arial to Segoe UI Emoji
+        JLabel userIcon = new JLabel("BLESSIE (OWNER) \uD83D\uDC64"); // Change username
+        userIcon.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14)); // Change font from Arial to Segoe UI Emoji
         userIcon.setForeground(Theme.TEXT);
         userIcon.setBounds(14, 12, 260, 18);
         userCard.add(userIcon);
@@ -125,7 +125,7 @@ public class DashboardPanel extends JPanel {
         dashRecentPanel.setBackground(Theme.SURFACE);
         JScrollPane scroll = new JScrollPane(dashRecentPanel);
         scroll.setBorder(null);
-        scroll.setBounds(0, 36, 880, 238);
+        scroll.setBounds(0, 36, 878, 238); // Change dimension
         recentCard.add(scroll);
 
         initMonthYear(monthDisplay);
@@ -216,9 +216,9 @@ public class DashboardPanel extends JPanel {
     private JPanel buildRecentRow(LedgerEntry e) {
         JPanel row = new JPanel(null);
         row.setBackground(Theme.SURFACE);
-        row.setMaximumSize(new Dimension(880, 52));
-        row.setMinimumSize(new Dimension(880, 52));
-        row.setPreferredSize(new Dimension(880, 52));
+        row.setMaximumSize(new Dimension(878, 52)); // Change dimension
+        row.setMinimumSize(new Dimension(878, 52));
+        row.setPreferredSize(new Dimension(878, 52));
         row.setBorder(new MatteBorder(0, 0, 1, 0, Theme.BORDER));
 
         JLabel itemLbl = new JLabel(e.getItem());
