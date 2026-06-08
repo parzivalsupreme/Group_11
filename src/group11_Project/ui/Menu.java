@@ -13,7 +13,7 @@ public class Menu extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private final AppData data = new AppData();
+    private AppData data;
     private JPanel contentPane;
     private JTabbedPane tabbedPane;
 
@@ -24,7 +24,9 @@ public class Menu extends JFrame {
     private ReportsPanel reportsPanel;
     private UsersPanel usersPanel;
 
-    public Menu() {
+    public Menu(AppData data) {
+    	this.data = data; // New
+    	
         setTitle("Blessie Apparel & Cosmetics");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,15 +47,28 @@ public class Menu extends JFrame {
         buildTopBar();
         buildSidebar();
         buildTabbedPane();
+        
+        applyPermissions(); 
 
         refreshAllPanels();
     }
-
+    
     private void refreshAllPanels() {
         dashboardPanel.refresh();
         ledgerPanel.refresh();
         reportsPanel.refresh();
         usersPanel.refresh();
+    }
+    
+    private void applyPermissions() { // New
+
+        boolean admin =
+            data.getCurrentRole().equalsIgnoreCase("Admin");
+        if (!admin) {
+            tabbedPane.remove(usersPanel);
+            navUsers.setEnabled(false);
+            navUsers.setVisible(false);
+        }
     }
 
     private void buildTopBar() {
@@ -122,7 +137,7 @@ public class Menu extends JFrame {
         btnLogout.setFocusPainted(false);
         btnLogout.setBorderPainted(false);
         btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnLogout.setBounds(40, 580, 100, 30); // Change from 614 to 580 (Danduan)
+        btnLogout.setBounds(40, 580, 100, 30);
         btnLogout.addActionListener(e -> {
             dispose();
             LoginForm login = new LoginForm();
@@ -133,13 +148,13 @@ public class Menu extends JFrame {
 
     private JLabel makeNavItem(String text, int y, boolean active) {
         JLabel lbl = new JLabel(text);
-        lbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 11)); // Change font from Arial to Segoe UI Emoji
+        lbl.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 11)); // Change from Arial to Segoe UI Emoji
         lbl.setForeground(active ? Theme.TEXT : Theme.MUTED);
         lbl.setBackground(active ? Theme.SIDEBAR_ACTIVE : Theme.SIDEBAR);
         lbl.setOpaque(true);
         lbl.setHorizontalAlignment(SwingConstants.LEFT);
         lbl.setBorder(new EmptyBorder(0, 16, 0, 0));
-        lbl.setBounds(0, y, 179, 44); // Change from 180 to 179 (Danduan)
+        lbl.setBounds(0, y, 179, 44); // Change from 180 to 179
         lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return lbl;
     }

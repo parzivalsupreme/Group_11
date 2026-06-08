@@ -1,6 +1,7 @@
 package group11_Project.ui;
 
 import java.awt.EventQueue;
+import group11_Project.data.AppData; // New
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,6 +28,7 @@ public class LoginForm extends JFrame {
 	private JPanel contentPane;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
+	private AppData data; // New
 
 	// Launch the application
 	public static void main(String[] args) {
@@ -47,6 +49,7 @@ public class LoginForm extends JFrame {
 
 	// Create the frame
 	public LoginForm() {
+		data = new AppData(); // New
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 701, 364);
@@ -94,14 +97,24 @@ public class LoginForm extends JFrame {
 		            String username = usernameField.getText();
 		            String password = String.valueOf(passwordField.getPassword());
 
-		            if (username.equals("user") && password.equals("user1234")) {
-		                JOptionPane.showMessageDialog(btnLogin, "Login successful");
+		            boolean found = false; // New (Start here)
+		            for(String[] user : data.getUsers()) {
+		                if(user[1].equals(username)
+		                && user[2].equals(password)) {
+		                    found = true;
+		                    data.setCurrentUser(user[0]);
+		                    data.setCurrentRole(user[3]);
+		                    break;
+		                }
+		            }
+		            if(found) {
+		                JOptionPane.showMessageDialog(LoginForm.this, "Login successful");
 		                dispose();
-		                Menu menu = new Menu();
+		                Menu menu = new Menu(data);
 		                menu.setVisible(true);
 		            } else {
-		                JOptionPane.showMessageDialog(btnLogin, "Login failed");
-		            }
+		                JOptionPane.showMessageDialog(LoginForm.this, "Invalid username or password");
+		            } // end here
 		        }
 			}
 		});
