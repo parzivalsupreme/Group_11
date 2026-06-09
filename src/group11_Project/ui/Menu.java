@@ -1,5 +1,6 @@
 package group11_Project.ui;
 
+import group11_Project.ui.Support;
 import group11_Project.data.AppData;
 import group11_Project.ui.panels.*;
 import java.awt.*;
@@ -115,9 +116,27 @@ public class Menu extends JFrame {
         sep.setBounds(10, 210, 160, 2);
         sidebar.add(sep);
 
-        JLabel navSupport = makeNavItem("               SUPPORT", 230, false);
+        JLabel navSupport = makeNavItem("               SUPPORT", 230, false); // New (Start here)
         navSupport.setForeground(new Color(180, 180, 180));
-        navSupport.setCursor(Cursor.getDefaultCursor());
+        navSupport.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        navSupport.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Support support = new Support();
+                support.setVisible(true);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                navSupport.setBackground(new Color(230, 230, 230));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                navSupport.setBackground(Theme.SIDEBAR);
+            }
+        }); // End here
+
         sidebar.add(navSupport);
 
         addNavClick(navDashboard, 0);
