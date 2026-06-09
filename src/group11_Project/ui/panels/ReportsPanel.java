@@ -75,14 +75,7 @@ public class ReportsPanel extends JPanel {
             cboRepYear.setSelectedItem(String.valueOf(yr));
         });
 
-        JLabel dateLbl = new JLabel("DATE: XX/XX", SwingConstants.LEFT);
-        dateLbl.setFont(new Font("Arial", Font.PLAIN, 11));
-        dateLbl.setForeground(Theme.MUTED);
-        dateLbl.setBackground(new Color(225, 225, 225));
-        dateLbl.setOpaque(true);
-        dateLbl.setBorder(new EmptyBorder(0, 8, 0, 0));
-        dateLbl.setBounds(20, 68, 460, 28);
-        add(dateLbl);
+        // Erase date
 
         JPanel balCard  = UiUtils.makeCard(500, 68, 120, 60); add(balCard);
         JPanel expCard  = UiUtils.makeCard(630, 68, 120, 60); add(expCard);
@@ -96,13 +89,13 @@ public class ReportsPanel extends JPanel {
         repExp     = UiUtils.addMetricLabel(expCard,  "₱0.00", Theme.DANGER);
         repRent    = UiUtils.addMetricLabel(rentCard, "₱0.00", Theme.MUTED);
 
-        JPanel salesCard = UiUtils.makeCard(20, 108, 460, 400);
+        JPanel salesCard = UiUtils.makeCard(20, 68, 458, 440); // y = 68, height = 440, width = 458
         add(salesCard);
 
         JLabel salesTitle = new JLabel("Sales");
         salesTitle.setFont(new Font("Arial", Font.BOLD, 11));
         salesTitle.setForeground(Theme.TEXT);
-        salesTitle.setBounds(14, 10, 200, 16);
+        salesTitle.setBounds(215, 10, 200, 16); // New
         salesCard.add(salesTitle);
 
         repSalesPanel = new JPanel();
@@ -110,13 +103,13 @@ public class ReportsPanel extends JPanel {
         repSalesPanel.setBackground(Theme.SURFACE);
         JScrollPane scroll = new JScrollPane(repSalesPanel);
         scroll.setBorder(null);
-        scroll.setBounds(0, 32, 460, 250);
+        scroll.setBounds(1, 31, 456, 250); // New
         salesCard.add(scroll);
 
         JPanel optionsPanel = new JPanel(null);
         optionsPanel.setBackground(Theme.SURFACE);
         optionsPanel.setBorder(new MatteBorder(1, 0, 0, 0, Theme.BORDER));
-        optionsPanel.setBounds(0, 284, 460, 80);
+        optionsPanel.setBounds(1, 284, 456, 80); // New
         salesCard.add(optionsPanel);
 
         JLabel optLbl = new JLabel("Filters"); // New
@@ -142,14 +135,14 @@ public class ReportsPanel extends JPanel {
         rExp.setBounds(12, 44, 160, 18);
         bg.add(rExp);
         optionsPanel.add(rExp);
-
+        
         rSales.addActionListener(e -> refresh()); // New
         rExp.addActionListener(e -> refresh()); // New
 
         JPanel totalRow = new JPanel(null);
         totalRow.setBackground(Theme.SURFACE);
         totalRow.setBorder(new MatteBorder(1, 0, 0, 0, Theme.BORDER));
-        totalRow.setBounds(0, 364, 460, 36);
+        totalRow.setBounds(1, 364, 456, 36); // New
         salesCard.add(totalRow);
 
         JLabel totalLbl = new JLabel("Total");
@@ -168,7 +161,7 @@ public class ReportsPanel extends JPanel {
         JPanel chartCard = UiUtils.makeCard(500, 108, 400, 400);
         add(chartCard);
         UiUtils.addCardTitle(chartCard, "Chart", 16, 10);
-
+        
         repChart = new ReportChartPanel(data.getLedger());
         repChart.setBounds(12, 32, 376, 356);
         chartCard.add(repChart);
@@ -197,7 +190,7 @@ public class ReportsPanel extends JPanel {
         List<LedgerEntry> filtered = data.getLedger().stream()
             .filter(e -> e.getDatetime().getMonthValue() - 1 == mo && e.getDatetime().getYear() == yr)
             .collect(Collectors.toList());
-
+        
         // New (Start here)
         double totalSales = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Sale"))
         		.mapToDouble(LedgerEntry::getTotal).sum();
@@ -210,6 +203,7 @@ public class ReportsPanel extends JPanel {
         repBalance.setText(FormatUtils.fmt(totalSales - totalExp - totalRent)); // New
         repExp.setText(FormatUtils.fmt(totalExp));
         repRent.setText(FormatUtils.fmt(totalRent)); // New
+        
         double displayedTotal; // New
         if (rSales.isSelected()) {
             displayedTotal = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Sale")
@@ -218,6 +212,10 @@ public class ReportsPanel extends JPanel {
             displayedTotal = filtered.stream().filter(e -> e.getType().equalsIgnoreCase("Expense")
                 || e.getType().equalsIgnoreCase("Rent")).mapToDouble(LedgerEntry::getTotal).sum();
         }
+
+        repTotal.setText(
+            FormatUtils.fmt(displayedTotal)
+        );
 
         repSalesPanel.removeAll();
         
@@ -258,9 +256,9 @@ public class ReportsPanel extends JPanel {
             for (Map.Entry<String, Double> en : itemMap.entrySet()) {
                 JPanel row = new JPanel(null);
                 row.setBackground(Theme.SURFACE);
-                row.setMaximumSize(new Dimension(460, 40));
-                row.setMinimumSize(new Dimension(460, 40));
-                row.setPreferredSize(new Dimension(460, 40));
+                row.setMaximumSize(new Dimension(456, 40)); // 458
+                row.setMinimumSize(new Dimension(456, 40));
+                row.setPreferredSize(new Dimension(456, 40));
                 row.setBorder(new MatteBorder(0, 0, 1, 0, Theme.BORDER));
                 JLabel k = new JLabel(en.getKey());
                 k.setFont(new Font("Arial", Font.PLAIN, 12));

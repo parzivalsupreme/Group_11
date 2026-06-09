@@ -123,6 +123,11 @@ public class LedgerPanel extends JPanel {
         btnDel.setPreferredSize(new Dimension(30, 28));
         btnDel.addActionListener(e -> deleteSelectedEntry()); // New
         filterRow.add(btnDel);
+        
+        boolean admin = data.getCurrentRole().equalsIgnoreCase("Admin"); // New
+
+        btnAdd.setEnabled(admin); // New
+        btnDel.setEnabled(admin); // New
 
         cboLedgerStatus.setPreferredSize(new Dimension(100, 28));
         filterRow.add(cboLedgerStatus);
@@ -188,8 +193,16 @@ public class LedgerPanel extends JPanel {
             b.setFocusPainted(false);
             return b;
         }); // End here
-        ledgerTable.getColumn("").setCellEditor(new EditButtonEditor(new JCheckBox(), this::editEntry)); // New
-
+        // New (Start here)
+        if (data.getCurrentRole().equalsIgnoreCase("Admin")) {
+        	ledgerTable.getColumn("").setCellEditor(
+            new EditButtonEditor(
+            new JCheckBox(),
+            this::editEntry));
+        } else {
+        	ledgerTable.getColumn("").setCellEditor(null);
+        } // End here
+        
         JScrollPane scroll = new JScrollPane(ledgerTable);
         scroll.setBounds(20, 100, 880, 550);
         scroll.setBorder(new LineBorder(Theme.BORDER, 1, true));
@@ -216,6 +229,10 @@ public class LedgerPanel extends JPanel {
     }
     
     private void deleteSelectedEntry() { // Definitely new
+    	if (!data.getCurrentRole().equalsIgnoreCase("Admin")) {
+    	    JOptionPane.showMessageDialog(parent, "Guests cannot delete ledger entries.");
+    	    return;
+    	} // New
         int viewRow = ledgerTable.getSelectedRow();
         if (viewRow < 0) {
             JOptionPane.showMessageDialog(parent, 
@@ -272,6 +289,10 @@ public class LedgerPanel extends JPanel {
     }
 
     private void showAddEntryDialog() {
+    	if (!data.getCurrentRole().equalsIgnoreCase("Admin")) {
+    	    JOptionPane.showMessageDialog(parent, "Guests cannot add ledger entries.");
+    	    return;
+    	} // New
         JDialog dlg = new JDialog(parent, "Add Ledger Entry", true);
         dlg.setSize(420, 380);
         dlg.setLocationRelativeTo(parent);
@@ -334,6 +355,10 @@ public class LedgerPanel extends JPanel {
     
     // New Edit from table column
     private void editEntry(int viewRow) {
+    	if (!data.getCurrentRole().equalsIgnoreCase("Admin")) {
+    	    JOptionPane.showMessageDialog(parent, "Guests cannot edit ledger entries.");
+    	    return;
+    	} // New
         if (viewRow < 0) return;
         int modelRow = ledgerTable.convertRowIndexToModel(viewRow);
         String timeStr = (String) ledgerTableModel.getValueAt(modelRow, 0);

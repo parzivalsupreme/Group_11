@@ -35,18 +35,19 @@ public class DashboardPanel extends JPanel {
         JPanel userCard = UiUtils.makeCard(20, 16, 300, 90);
         add(userCard);
 
-        JLabel userIcon = new JLabel("BLESSIE (OWNER) \uD83D\uDC64");
+        JLabel userIcon = new JLabel();
         userIcon.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
         userIcon.setForeground(Theme.TEXT);
         userIcon.setBounds(14, 12, 260, 18);
         userCard.add(userIcon);
+        userIcon.setText(data.getCurrentUser() + "\uD83D\uDC64"); // New
 
-        JLabel adminLbl = new JLabel("Admin");
+        JLabel adminLbl = new JLabel();
         adminLbl.setFont(new Font("Arial", Font.PLAIN, 11));
         adminLbl.setForeground(Theme.MUTED);
         adminLbl.setBounds(14, 32, 260, 16);
         userCard.add(adminLbl);
-        adminLbl.setText(data.getCurrentUser()); // New
+        adminLbl.setText(data.getCurrentRole()); // New
 
         JPanel monthCard = UiUtils.makeCard(20, 118, 300, 130);
         add(monthCard);
