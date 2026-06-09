@@ -115,12 +115,7 @@ public class Menu extends JFrame {
         sep.setBounds(10, 210, 160, 2);
         sidebar.add(sep);
 
-        JLabel navSettings = makeNavItem("  SETTINGS", 230, false);
-        navSettings.setForeground(new Color(180, 180, 180));
-        navSettings.setCursor(Cursor.getDefaultCursor());
-        sidebar.add(navSettings);
-
-        JLabel navSupport = makeNavItem("  SUPPORT", 278, false);
+        JLabel navSupport = makeNavItem("               SUPPORT", 230, false);
         navSupport.setForeground(new Color(180, 180, 180));
         navSupport.setCursor(Cursor.getDefaultCursor());
         sidebar.add(navSupport);
