@@ -387,7 +387,7 @@ public class LedgerPanel extends JPanel {
         JComboBox<String> fMethod = UiUtils.makeCombo(new String[]{"Cash", "GCash", "Card", "Bank Transfer"});
         fMethod.setSelectedItem(entry.getMethod()); fMethod.setBounds(160, 116, 130, 28);
 
-        JComboBox<String> fType = UiUtils.makeCombo(new String[]{"Sale", "Expense"});
+        JComboBox<String> fType = UiUtils.makeCombo(new String[]{"Sale", "Expense", "Rent"}); // Add Rent when editing
         fType.setSelectedItem(entry.getType()); fType.setBounds(16, 178, 130, 28);
 
         JComboBox<String> fStatus = UiUtils.makeCombo(new String[]{"Paid", "Pending"});
