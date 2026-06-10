@@ -89,6 +89,7 @@ public class UsersPanel extends JPanel {
                     if (JOptionPane.showConfirmDialog(parent, "Remove this user?", "Confirm",
                         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                         data.getUsers().remove(idx);
+                        Database.saveUsers(data.getUsers()); // Forgot to add this one
                         refresh();
                     }
                 });
