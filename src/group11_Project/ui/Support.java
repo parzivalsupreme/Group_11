@@ -14,7 +14,7 @@ public class Support extends JFrame {
 	public Support() {
 		setTitle("Support");
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Dispose instead of exiting the entire app
         setBounds(80, 60, 1100, 720);
         setLocationRelativeTo(null);
         
