@@ -80,20 +80,28 @@ public class LedgerPanel extends JPanel {
         JButton dn = UiUtils.makeTinyArrow("▼", 524, 22);
         up.addActionListener(e -> {
             int mo = cboLedgerMonth.getSelectedIndex();
-            int yr = Integer.parseInt((String) cboLedgerYear.getSelectedItem());
-            if (mo == 0) { mo = 12; yr--; } else mo--;
-            if (mo == 0) mo = 12;
+            int yr = Integer.parseInt((String)cboLedgerYear.getSelectedItem());
+            if (mo <= 1) { // January or All Months
+                mo = 12;
+                yr--;
+            } else {
+                mo--;
+            }
             cboLedgerMonth.setSelectedIndex(mo);
             cboLedgerYear.setSelectedItem(String.valueOf(yr));
-        });
+        }); // New
         dn.addActionListener(e -> {
             int mo = cboLedgerMonth.getSelectedIndex();
-            int yr = Integer.parseInt((String) cboLedgerYear.getSelectedItem());
-            mo++;
-            if (mo > 12) { mo = 1; yr++; }
+            int yr = Integer.parseInt((String)cboLedgerYear.getSelectedItem());
+            if (mo >= 12) { // December
+                mo = 1;
+                yr++;
+            } else {
+                mo++;
+            }
             cboLedgerMonth.setSelectedIndex(mo);
             cboLedgerYear.setSelectedItem(String.valueOf(yr));
-        });
+        }); // New
         headerRow.add(up);
         headerRow.add(dn);
 
@@ -309,7 +317,18 @@ public class LedgerPanel extends JPanel {
         JComboBox<String> fStatus = UiUtils.makeCombo(new String[]{"Paid", "Pending"});
         fStatus.setBounds(160, 178, 130, 28);
         JTextField fDate = UiUtils.styledField();
-        fDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        int selectedMonth = cboLedgerMonth.getSelectedIndex(); // New (Start here)
+        int selectedYear = Integer.parseInt((String)cboLedgerYear.getSelectedItem());
+        if(selectedMonth == 0) {
+            selectedMonth = LocalDate.now().getMonthValue();
+        }
+
+        LocalDateTime defaultDate = LocalDateTime.of(
+                selectedYear, selectedMonth,
+                1, 12, 0
+            );
+
+        fDate.setText(defaultDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))); // End here
         fDate.setBounds(16, 240, 275, 28);
 
         UiUtils.addDialogLabel(dlg, "Item Name",       16, 36);
@@ -387,7 +406,7 @@ public class LedgerPanel extends JPanel {
         JComboBox<String> fMethod = UiUtils.makeCombo(new String[]{"Cash", "GCash", "Card", "Bank Transfer"});
         fMethod.setSelectedItem(entry.getMethod()); fMethod.setBounds(160, 116, 130, 28);
 
-        JComboBox<String> fType = UiUtils.makeCombo(new String[]{"Sale", "Expense", "Rent"}); // Add Rent when editing
+        JComboBox<String> fType = UiUtils.makeCombo(new String[]{"Sale", "Expense", "Rent"});
         fType.setSelectedItem(entry.getType()); fType.setBounds(16, 178, 130, 28);
 
         JComboBox<String> fStatus = UiUtils.makeCombo(new String[]{"Paid", "Pending"});
